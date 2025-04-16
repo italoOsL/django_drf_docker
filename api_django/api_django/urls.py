@@ -14,8 +14,25 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
+schema_view = get_schema_view(
+   openapi.Info(
+      title="API de Vendas",
+      default_version='v1',
+      description="Documentação interativa da API",
+      contact=openapi.Contact(email="oli23.italo@gmail.com"),
+   ),
+   public=True,
+   permission_classes=(permissions.AllowAny,),
+)
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include('core.urls')),
+    path('api-auth/', include('rest_framework.urls')), # login no navegador DRF
+    path('api/token/', obtain_auth_token, name='api_token_auth'),  # NOVO
 ]
